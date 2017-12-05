@@ -46,7 +46,7 @@ function list_dirs($dir) {
 			}
 			// else is not directory we simple save value in arr $result
 			else{
-				$result[] = $value; 
+				$result[] = $value;
 			}
 		}
 	}
@@ -67,7 +67,7 @@ function list_dirs($dir) {
 *	is_dir — Tells whether the filename is a directory
 *	isset — Determine if a variable is set and is not NULL
 *	pathinfo — Returns information about a file path
-*		desc: mixed pathinfo ( string $path [, int $options = PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME ] *			)
+*		desc: mixed pathinfo ( string $path [, int $options = PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME ] * )
 *	DIRECTORY_SEPARATOR - Predefined Constants which separate path
 *	print_r — Prints human-readable information about a variable
 */
