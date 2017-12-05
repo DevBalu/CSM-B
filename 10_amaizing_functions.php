@@ -1,14 +1,13 @@
 <?php 
-/*FN1--------------------check_ac_email-------------------
-	filter_var — Filters a variable with a specified filter
-	The FILTER_VALIDATE_EMAIL filter validates an e-mail address.
-	strtolower — Make a string lowercase
-
-	substr — Return part of a string
-		return: Returns the portion of string specified by the start and length parameters.
-
-	trim — Strip whitespace (or other characters) from the beginning and end of a string
-	var_dump — Dumps information about a variable
+/*FN.1--------------------------------------------------------------------------check_ac_email-------------------
+*	filter_var — Filters a variable with a specified filter
+*	The FILTER_VALIDATE_EMAIL filter validates an e-mail address.
+*	strtolower — Make a string lowercase
+*
+*	substr — Return part of a string
+*		return: Returns the portion of string specified by the start and length parameters.
+*
+*	trim — Strip whitespace (or other characters) from the beginning and end of a string
 */
 $testMail = 'test@step.ac.uk';
 
@@ -21,16 +20,16 @@ function check_ac_email($email){
 	return false;
 }
 /* Usage */
-/*to display the result, uncomment the line below.*/
+//to display the result, uncomment the line below.
 // var_dump(check_ac_email($testMail));
 
 
-/*FN2--------------------list_dirs-------------------
-	scandir — List files and directories inside the specified path
-	in_array — Checks if a value exists in an array
-	is_dir — Tells whether the filename is a directory
-	DIRECTORY_SEPARATOR - Predefined Constants which separate path
-	print_r — Prints human-readable information about a variable
+/*FN.2--------------------------------------------------------------------------list_dirs-------------------
+*	scandir — List files and directories inside the specified path
+*	in_array — Checks if a value exists in an array
+*	is_dir — Tells whether the filename is a directory
+*	DIRECTORY_SEPARATOR - Predefined Constants which separate path
+*	print_r — Prints human-readable information about a variable
 */
 function list_dirs($dir) {
 	$result = [];
@@ -55,25 +54,27 @@ function list_dirs($dir) {
 	return $result; 
 }
 /* Usage */
-/* to display the result, uncomment the three line below.*/
+//to display the result, uncomment the three line below.
 // print'<pre>';
 // print_r(list_dirs('C:\xampp\htdocs\cookie_listener\vendor'));
 // print'</pre>';
 
 
-/*FN3--------------------count_files_of_type-------------------
-	scandir — List files and directories inside the specified path, return array with value
-	trim — Strip whitespace (or other characters) from the beginning and end of a string
-	in_array — Checks if a value exists in an array
-	is_dir — Tells whether the filename is a directory
-	pathinfo — Returns information about a file path
-		desc: mixed pathinfo ( string $path [, int $options = PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME ] )
-	DIRECTORY_SEPARATOR - Predefined Constants which separate path
-	print_r — Prints human-readable information about a variable
+/*FN.3--------------------------------------------------------------------------count_files_of_type-------------------
+*	scandir — List files and directories inside the specified path, return array with value
+*	trim — Strip whitespace (or other characters) from the beginning and end of a string
+*	in_array — Checks if a value exists in an array
+*	is_dir — Tells whether the filename is a directory
+*	isset — Determine if a variable is set and is not NULL
+*	pathinfo — Returns information about a file path
+*		desc: mixed pathinfo ( string $path [, int $options = PATHINFO_DIRNAME | PATHINFO_BASENAME | PATHINFO_EXTENSION | PATHINFO_FILENAME ] *			)
+*	DIRECTORY_SEPARATOR - Predefined Constants which separate path
+*	print_r — Prints human-readable information about a variable
 */
 function count_files_of_type($dir, $ext){
 	$result = '';
 	$cdir = scandir($dir);
+	// remove whitespace
 	$extention = trim($ext);
 	// counter
 	$count = 0;
@@ -84,9 +85,16 @@ function count_files_of_type($dir, $ext){
 			if (!is_dir($dir . DIRECTORY_SEPARATOR . $value)){
 				$pathinfo = pathinfo($value);
 
-				// checks if the extension that we set is equal to the value of the file && if extension of file equal with null set default value txt
-				if ($pathinfo['extension'] === $extention || $extention === 'txt' && $pathinfo['extention'] === null) {
-					$count++;
+				// if extention exist
+				if (isset($pathinfo['extension'])) {
+					// checks if the extension that we set is equal to the value of the file 
+					if ($pathinfo['extension'] == $extention) {
+						$count++;
+					}
+				}
+				//if extension of file does not exist and extension that we find is  equal to 'txt' set default value txt
+				else if (!isset($pathinfo['extension']) && $extention == 'txt') {
+						$count++;
 				}
 
 			}
@@ -96,13 +104,14 @@ function count_files_of_type($dir, $ext){
 	return $count;
 }
 /* Usage */
-/* to display the result, uncomment the line below.*/
-// print_r(count_files_of_type('C:\xampp\htdocs\cookie_listener', 'php'));
+//to display the result, uncomment the line below.
+
+// print count_files_of_type('C:\xampp\htdocs\cookie_listener\test', 'php');
 
 
-/*FN4--------------------rand_array-------------------
-	rand — Generate a random integer
-	print_r — Prints human-readable information about a variable
+/*FN.4--------------------------------------------------------------------------rand_array-------------------
+*	rand — Generate a random integer
+*	print_r — Prints human-readable information about a variable
 */
 function rand_array($count, $lower, $upper){
 	//arr with random numbers
@@ -115,17 +124,17 @@ function rand_array($count, $lower, $upper){
 	return $result;
 }
 /* Usage */
-/* to display the result, uncomment the three line below.*/
+//to display the result, uncomment the three line below.
 // print '<pre>';
 // print_r(rand_array(20, 0, 20));
 // print '</pre>';
 
 
-/*FN5--------------------num_match_array-------------------
-	count — Count all elements in an array, or something in an object
-	print_r — Prints human-readable information about a variable
+/*FN.5--------------------------------------------------------------------------num_match_array-------------------
+*	count — Count all elements in an array, or something in an object
+*	print_r — Prints human-readable information about a variable
 */
-$a = ['asd', 'asdas', 'sadas', 'asd', 'asd'];
+$a = ['sadas', 'asd'];
 $b = ['asd', 'asdas', 'sadas'];
 
 function num_match_array ($firstArray, $secondArray){
@@ -134,7 +143,7 @@ function num_match_array ($firstArray, $secondArray){
 	foreach ($firstArray as $key => $firstArrValue) {
 		// when iteration we compare value of first array with each values to second array
 		foreach ($secondArray as $key => $secondArrValue) {
-			// if value from first array meets coincidence, variable $ count increases
+			// if value from first array meets coincidence, variable $count increases
 			if ($firstArrValue == $secondArrValue) {
 				$count++;
 			}
@@ -144,32 +153,32 @@ function num_match_array ($firstArray, $secondArray){
 	return $count;
 }
 /* Usage */
-/* to display the result, uncomment the line below.*/
+//to display the result, uncomment the line below.
 // print_r(num_match_array($a, $b));
 
 
-/*FN6--------------------rand_password-------------------
-	strlen — Get string length
-		desc: int strlen ( string $string )
-		return: the length of the given string.
-
-	rand — Generate a random integer
-		desc: int rand ( int $min , int $max )
-		return: A pseudo random value between min (or 0) and max (or getrandmax(), inclusive)
-
-	strtoupper — Make a string uppercase
-		desc: string strtoupper ( string $string )
-		return: Returns the uppercased string.
-
-	str_split Convert a string to an array
-		desc: array str_split ( string $string [, int $split_length = 1 ] )
-		return: array with all characters of string 
-
-	implode — Join array elements with a string
-		desc: string implode ( array $pieces )
-		return :  a string containing a string representation of all the array elements in the same order, with the glue string between each element 
-
-	print_r — Prints human-readable information about a variable
+/*FN.6--------------------------------------------------------------------------rand_password-------------------
+*	strlen — Get string length
+*		desc: int strlen ( string $string )
+*		return: the length of the given string.
+*
+*	rand — Generate a random integer
+*		desc: int rand ( int $min , int $max )
+*		return: A pseudo random value between min (or 0) and max (or getrandmax(), inclusive)
+*
+*	strtoupper — Make a string uppercase
+*		desc: string strtoupper ( string $string )
+*		return: Returns the uppercased string.
+*
+*	str_split Convert a string to an array
+*		desc: array str_split ( string $string [, int $split_length = 1 ] )
+*		return: array with all characters of string 
+*
+*	implode — Join array elements with a string
+*		desc: string implode ( array $pieces )
+*		return :  a string containing a string representation of all the array elements in the same order, with the glue string between each * 				element 
+*
+*	print_r — Prints human-readable information about a variable
 */
 function rand_password($length){
 	$result = '';
@@ -200,11 +209,11 @@ function rand_password($length){
 	return $passGenerated;
 }
 /* Usage */
-/* to display the result, uncomment the line below.*/
+//to display the result, uncomment the line below.
 // print rand_password(10);
 
 
-/*FN7--------------------clean_text-------------------
+/*FN.7--------------------------------------------------------------------------clean_text-------------------
 	preg_split — Split string by a regular expression
 		desc: array preg_split ( string $pattern , string $subject [, int $limit = -1 [, int $flags = 0 ]] )
 		return: Returns an array containing substrings of subject split along boundaries matched by pattern, or FALSE on failure
@@ -234,11 +243,11 @@ function clean_text($string){
 	return $result;
 }
 /* Usage */
-/* to display the result, uncomment the line below.*/
+//to display the result, uncomment the line below.
 // print_r( clean_text($text));
 
 
-/*FN8--------------------times_table-------------------*/
+/*FN.8--------------------------------------------------------------------------times_table-------------------*/
 // function not return anything
 function times_table($upper):void{
 	// counter for <tr> tag
@@ -280,11 +289,16 @@ function times_table($upper):void{
 
 }
 /* Usage */
-/* to display the result, uncomment the line below.*/
+//to display the result, uncomment the line below.
 // times_table(20);
 
 
-/*FN9--------------------rgb_to_cmyk-------------------*/
+/*FN.9--------------------------------------------------------------------------rgb_to_cmyk-------------------
+*	max — Find highest value
+*	round — Rounds a float
+*	(double) - Float (floating point numbers - also called double)
+*	print_r — Prints human-readable information about a variable
+*/
 class CMYK
 {
 	public $C;
@@ -313,30 +327,34 @@ function rgb_to_cmyk($r, $g, $b) {
 }
 /* Usage */
 $r = 66; $g = 134; $b = 244;
-print_r (rgb_to_cmyk($r, $g, $b));
-
-/*                    */
+// print_r (rgb_to_cmyk($r, $g, $b));
 
 
-/*FN10--------------------anagram-------------------
-	count_chars — Return information about characters used in a string
-		desc: mixed count_chars ( string $string [, int $mode = 0 ] )
-		return: Counts the number of occurrences of every byte-value (0..255) in string and returns it in various ways.
-			0 - an array with the byte-value as key and the frequency of every byte as value.
-			1 - same as 0 but only byte-values with a frequency greater than zero are listed.
-			2 - same as 0 but only byte-values with a frequency equal to zero are listed.
-			3 - a string containing all unique characters is returned.
-			4 - a string containing all not used characters is returned.
 
-	var_dump — Dumps information about a variable
+/*FN.10--------------------------------------------------------------------------anagram-------------------
+*	count_chars — Return information about characters used in a string
+*		desc: mixed count_chars ( string $string [, int $mode = 0 ] )
+*		return: Counts the number of occurrences of every byte-value (0..255) in string and returns it in various ways.
+*			0 - an array with the byte-value as key and the frequency of every byte as value.
+*			1 - same as 0 but only byte-values with a frequency greater than zero are listed.
+*			2 - same as 0 but only byte-values with a frequency equal to zero are listed.
+*			3 - a string containing all unique characters is returned.
+*			4 - a string containing all not used characters is returned.
+*
+*	var_dump — Dumps information about a variable
 */
 function anagram($a, $b){
+	// compare byte-value and the frequency of every bytein both arrays
+	// if they is  equal return true
 	if (count_chars($a, 1) == count_chars($b, 1)){
 		return true;
 	}
+	// else return false
 	return false;
 }
-/* to display the result, uncomment the four line below.*/
+/* Usage */
+//to display the result, uncomment the four line below.
+
 // print '<pre>';
 // var_dump(anagram('anagram','nagaram'));
 // var_dump(anagram('cat','rat'));
