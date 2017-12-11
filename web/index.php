@@ -9,15 +9,17 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
   'monolog.logfile' => 'php://stderr',
 ));
 
+// Register view rendering
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/views',
+));
+
+// Our web handlers
+
 $app->get('/', function() use($app) {
-	$app['monolog']->addDebug('cowsay');
-
-	return $app->render('test.php');;
-});
-
-$app->get('/cowsay', function() use($app) {
-  $app['monolog']->addDebug('cowsay');
-  return "<pre> text </pre>";
+  $app['monolog']->addDebug('logging output.');
+  print "vasea_print";
+  return 'vasea';
 });
 
 $app->run();
