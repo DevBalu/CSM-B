@@ -11,7 +11,7 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 
 $app->get('/', function() use($app) {
 	$app['monolog']->addDebug('cowsay');
-	print "vasea";
+	print "print from index.php";
 
-	return "vasea- return";
+	return $app->render('test.php');;
 });
