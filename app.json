@@ -1,0 +1,6 @@
+{
+  "name": "Start on Heroku: PHP",
+  "description": "First push to server",
+  "repository": "https://git.heroku.com/steam-rests.git",
+  "addons": []
+}
