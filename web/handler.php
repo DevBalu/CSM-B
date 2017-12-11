@@ -224,7 +224,7 @@ if(!empty($_GET['text'])) {
 /*----------------------------------------------------------------------------------------------------------------END USAGE METHODS---------------------------------------------*/
 
 	/*RETURN JSON AT PAGE*/
-	// echo json_encode($ComRes);
+	echo json_encode($ComRes);
 	// print '<pre>';
 	// print_r($ComRes);
 	// print_r($content);
