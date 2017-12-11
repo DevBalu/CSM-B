@@ -18,7 +18,6 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->get('/', function() use($app) {
   $app['monolog']->addDebug('logging output.');
-  print "vasea_print";
   return 'vasea';
 });
 
