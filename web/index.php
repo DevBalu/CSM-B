@@ -1,5 +1,6 @@
 <?php 
-require('../vendor/autoload.php');
+// require('../vendor/autoload.php');
+require 'handler.php';
 
 $app = new Silex\Application();
 $app['debug'] = true;
@@ -13,7 +14,6 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 $app->get('/test', function() use($app) {
 	$app['monolog']->addDebug('logging output.');
 
-	require 'handler.php';
 	return json_encode($ComRes);
 });
 
