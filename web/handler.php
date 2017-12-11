@@ -213,13 +213,6 @@ if(!empty($_GET['text'])) {
 			//---logics needed to country img
 
 		}
-			print '<pre>';
-			print_r($personaName);
-			print '</pre>';
-
-		// print '<pre>';
-		// print_r($personaName);
-		// print '</pre>';
 		//end elimen unwanted characters
 
 		/*END USER PERSONAL INFO*/
@@ -232,9 +225,9 @@ if(!empty($_GET['text'])) {
 
 	/*RETURN JSON AT PAGE*/
 	// echo json_encode($ComRes);
-	print '<pre>';
+	// print '<pre>';
 	// print_r($ComRes);
 	// print_r($content);
-	print '</pre>';
+	// print '</pre>';
 
 // }
