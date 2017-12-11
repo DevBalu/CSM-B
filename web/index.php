@@ -20,7 +20,7 @@ $app->get('/', function() use($app) {
 	$app['monolog']->addDebug('logging output.');
 
 	require 'handler.php';
-	return $ComRes;
+	return json_encode($ComRes);
 });
 
 $app->run();
