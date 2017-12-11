@@ -10,7 +10,7 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 ));
 
 // Our web handlers
-$app->get('/page{data}', function() use($app) {
+$app->get('/{data}', function() use($app) {
 	$app['monolog']->addDebug('logging output.');
 
 	// require 'handler.php';
