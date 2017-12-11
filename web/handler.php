@@ -7,7 +7,7 @@
 *	HERE WILL BE DESCRIBED ALL METHODS AND FUNCTION WHAT WE USE BELOW
 *
 */
-require('../vendor/autoload.php');
+// require('../vendor/autoload.php');
 use Buzz\Browser;
 use Buzz\Client\Curl;
 use Buzz\Listener\CookieListener;
