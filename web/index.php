@@ -10,12 +10,11 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 ));
 
 // Our web handlers
-$app->get('/{data}', function() use($app) {
+$app->get('/search', function() use($app) {
 	$app['monolog']->addDebug('logging output.');
 
-	// require 'handler.php';
-	// return json_encode($ComRes);
-	return $data;
+	require 'handler.php';
+	return json_encode($ComRes);
 });
 
 $app->run();
