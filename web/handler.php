@@ -16,6 +16,12 @@ if(!empty($_GET['text'])) {
 	$search_text = $_GET['text'];
 }
 
+if (!empty($_GET['page'])) {
+	$search_p = '&page=' . $_GET['page'];
+} else {
+	$search_p = '';
+}
+
 // if(!empty($_GET['text'])) { 
 /*-----------------------------------------------------------------------------------------------------------VIRTUAL BROWSER---------------------------------------------*/
 	$browser = new Browser();
@@ -30,7 +36,7 @@ if(!empty($_GET['text'])) {
 	// Sort data from respons and after we found script which contain session id we save it in variable
 	$sesId = substr($response, strrpos($response, 'g_sessionID = ')+15, 24);
 	// request with parametres to server
-	$response = $browser->get('https://steamcommunity.com/search/SearchCommunityAjax?text=' . $search_text . '&filter=users&sessionid=' . $sesId . '&steamid_user=false');
+	$response = $browser->get('https://steamcommunity.com/search/SearchCommunityAjax?text=' . $search_text . '&filter=users&sessionid=' . $sesId . '&steamid_user=false' . $search_p);
 	$content = $response->getContent();
 /*-------------------------------------------------------------------------------------------------------END VIRTUAL BROWSER---------------------------------------------*/
 
@@ -229,6 +235,6 @@ if(!empty($_GET['text'])) {
 	// print_r($content);
 	// print '</pre>';
 
-	// print_r( json_encode($ComRes) );
+	print_r( json_encode($ComRes) );
 
 // }
