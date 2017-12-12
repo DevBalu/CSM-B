@@ -15,6 +15,7 @@ $app->get('/', function() use($app) {
 	$app['monolog']->addDebug('handler');
 
 	require('handler.php');
+	return print_r( json_encode($ComRes) );;
 });
 
 $app->run();

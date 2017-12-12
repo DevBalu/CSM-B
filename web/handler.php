@@ -229,6 +229,6 @@ if(!empty($_GET['text'])) {
 	// print_r($content);
 	// print '</pre>';
 
-	print_r( json_encode($ComRes) );
+	// print_r( json_encode($ComRes) );
 
 // }
