@@ -7,7 +7,7 @@
 *	HERE WILL BE DESCRIBED ALL METHODS AND FUNCTION WHAT WE USE BELOW
 *
 */
-// require('../vendor/autoload.php');
+require('../vendor/autoload.php');
 use Buzz\Browser;
 use Buzz\Client\Curl;
 use Buzz\Listener\CookieListener;
@@ -224,10 +224,11 @@ if(!empty($_GET['text'])) {
 /*----------------------------------------------------------------------------------------------------------------END USAGE METHODS---------------------------------------------*/
 
 	/*RETURN JSON AT PAGE*/
-	echo json_encode($ComRes);
 	// print '<pre>';
 	// print_r($ComRes);
 	// print_r($content);
 	// print '</pre>';
+
+	print_r( json_encode($ComRes) );
 
 // }

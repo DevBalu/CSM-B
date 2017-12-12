@@ -12,7 +12,8 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 
 // Our web handlers
 $app->get('/', function() use($app) {
-	$app['monolog']->addDebug('logging output.');
+	$app['monolog']->addDebug('handler');
+
 	require('handler.php');
 	return json_encode($ComRes);
 });
