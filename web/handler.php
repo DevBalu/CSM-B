@@ -157,6 +157,18 @@ if (!empty($_GET['page'])) {
 		return preg_replace_callback('/\\\\u([0-9a-f]{4})/i', 'replace_unicode_escape_sequence', $str);
 	}
 	// END decode unicods method
+
+
+	function utf8ize($d) {
+		if (is_array($d)) {
+			foreach ($d as $k => $v) {
+				$d[$k] = utf8ize($v);
+			}
+		} else if (is_string ($d)) {
+			return unicode_decode($d);
+		}
+		return $d;
+	}
 /*------------------------------------------------------------------------------------------------------------------------END METHODS---------------------------------------------*/
 	/*GLOBAL OBJECT*/
 	//create global objec which will be contain sorted data from respons
@@ -185,17 +197,18 @@ if (!empty($_GET['page'])) {
 		$explode_spans = explode('<span style=\"color: whitesmoke\">', $crud_user_match_info);
 
 		//clip spans
-		$user_match_info = unicode_decode(clipSpans($explode_spans));
+		$user_match_info = utf8ize(clipSpans($explode_spans));
 		//end clip spans method
 		/*END USER MUCH INFO*/
 
 		/*USER PERSONAL INFO*/
+
 		$crud_user_personal_info = clip_iter_value($search_row[$i] , '<div class=\"searchPersonaInfo\">');
 		$explode_personal_info = explode('\"searchPersonaName\"', $crud_user_personal_info);//part is to element in arrs 
 
 		//-----elimen unwanted characters
 		//call function unwantedCharacters($usortedArr, $elimenArgArr) return arr
-		$arguments = ['\r', '\n', '\t', '\t', '\/id\/', '<\/span>', '<\/div>', 'href=\"https:\/\/steamcommunity.com\/', '<a class=', '<span style=\"color: whitesmoke\">', '<div style=\"clear:left\">', '<div class=\"searchPersonaInfo\">', '<br \/>&nbsp', 'style=\"margin-bottom:-2px\"', '&nbsp;', '<span class=\"community_searchresults_title\">', 'href=\"https:\/\/steamcommunity.com', ' border=\"0\" \/><div class=\"search_match_info\"><div>', '<div class=\"search_match_info\">'];
+		$arguments = ['\r', '\n', '\t', '\t', '\/id\/', '<\/span>', '<\/div>', 'href=\"https:\/\/steamcommunity.com\/', 'class=', '<span style=\"color: whitesmoke\">', '<div style=\"clear:left\">', '<div class=\"searchPersonaInfo\">', '<br \/>&nbsp', 'style=\"margin-bottom:-2px\"', '&nbsp;', '<span class=\"community_searchresults_title\">', 'href=\"https:\/\/steamcommunity.com', ' border=\"0\" \/><div class=\"search_match_info\"><div>', '<div class=\"search_match_info\">', '<div \"searchPersonaInfo\">'];
 		//first arr is strings from from which need to elimen the following characters
 		$elimened = unwantedCharacters($explode_personal_info, $arguments) ;
 
@@ -207,34 +220,55 @@ if (!empty($_GET['page'])) {
 			$replaced = str_replace('\/' , '/', $value);
 
 			//---logics needed to obtain personal Name
+
 			//remove part of steam url which has ben startet from word profiles
-			$persona_name_crud = substr($replaced, strpos($replaced, 'profiles/') + 18, 30);
+			$persona_name_crud = substr($replaced, strpos($replaced, 'profiles/'), 100);
+
 			// find part what need to remove from string
+			$need_to_remove = clip_iter_value($persona_name_crud, '</a>'); //from tag a to end of string
+			$replace = str_replace($need_to_remove, " ", $persona_name_crud); // replace from tag a to end of string
+			$need_to_add = clip_iter_value($replace, '\">');//from start to this characrer clip ' \"> '
+			$need_to_add = str_replace('\">', '', $need_to_add);//inclusive and ' \"> ' need to remove
+			$need_to_add = unicode_decode($need_to_add);// decode unicode
 
-			$need_to_remove = clip_iter_value($persona_name_crud, '</a>');
+			$personaName[] = $need_to_add;
+			//---END logics needed to obtain personal Name
 
-			$personaName[$key] = str_replace($need_to_remove, " ", $persona_name_crud);
+
 			//---logics needed to obtain region
+			// print_r($need_to_remove . "\n");
+			//---END logics needed to obtain region
 
 			//---logics needed to country img
+			//---END logics needed to country img
 
 		}
 		//end elimen unwanted characters
 
+		// print '<pre>';
+		// print_r($personaName);
+		// print '</pre>';
+
+		$user_personal_info = [
+			'personaName' => $personaName[1]
+		];
 		/*END USER PERSONAL INFO*/
 
 
-		$user = new UserData($userUrl, $userLinkAvatar, 'user_person_info', $user_match_info);
+		$user = new UserData($userUrl, $userLinkAvatar, $user_personal_info, $user_match_info);
 		$ComRes->setUserData($user);
 	}/*END MAIN FOR*/
 /*----------------------------------------------------------------------------------------------------------------END USAGE METHODS---------------------------------------------*/
 
 	/*RETURN JSON AT PAGE*/
+	echo json_encode($ComRes);
+	// echo json_last_error_msg();
+
 	// print '<pre>';
 	// print_r($ComRes);
+	// print_r(utf8ize($ComRes));
 	// print_r($content);
 	// print '</pre>';
 
-	print_r( json_encode($ComRes) );
 
 // }
