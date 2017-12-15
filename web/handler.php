@@ -197,7 +197,7 @@ if (!empty($_GET['page'])) {
 		$explode_spans = explode('<span style=\"color: whitesmoke\">', $crud_user_match_info);
 
 		//clip spans
-		$user_match_info = utf8ize(clipSpans($explode_spans));
+		$user_match_info = clipSpans($explode_spans);
 		//end clip spans method
 		/*END USER MUCH INFO*/
 
@@ -214,43 +214,53 @@ if (!empty($_GET['page'])) {
 
 		$personaName = [];
 		$personaRegion = [];
-		$countryImage = [];
+		$countryFlag = [];
 		foreach ($elimened as $key => $value) {
 			// replace "\/" to "/"
 			$replaced = str_replace('\/' , '/', $value);
 
-			//---logics needed to obtain personal Name
-
+			/*-------logics needed to obtain personal Name------*/
 			//remove part of steam url which has ben startet from word profiles
 			$persona_name_crud = substr($replaced, strpos($replaced, 'profiles/'), 100);
-
 			// find part what need to remove from string
 			$need_to_remove = clip_iter_value($persona_name_crud, '</a>'); //from tag a to end of string
 			$replace = str_replace($need_to_remove, " ", $persona_name_crud); // replace from tag a to end of string
 			$need_to_add = clip_iter_value($replace, '\">');//from start to this characrer clip ' \"> '
 			$need_to_add = str_replace('\">', '', $need_to_add);//inclusive and ' \"> ' need to remove
 			$need_to_add = unicode_decode($need_to_add);// decode unicode
-
+			//final sort persona name
 			$personaName[] = $need_to_add;
 			//---END logics needed to obtain personal Name
 
 
-			//---logics needed to obtain region
-			// print_r($need_to_remove . "\n");
-			//---END logics needed to obtain region
+			/*---------logics needed to obtain region------------*/
+// unwantedCharacters
+			$region_crud = substr($replaced, strpos($replaced, 'profiles/'), 200);
 
-			//---logics needed to country img
-			//---END logics needed to country img
+			if (strpos($region_crud, '<img  s')) {
+				print_r($region_crud . "\n");
+			}
+
+
+
+			/*---------END logics needed to obtain region------------*/
+
+			/*---------logics needed to country img ------------------*/
+			$country_img_crud = substr($replaced, strpos($replaced, 'https://steamcommunity-a.akamaihd.net/public/images/countryflags'), 71);
+			// find part what need to remove from string
+			if (strpos($country_img_crud, 'countryflags')) {
+				$countryFlag[] = $country_img_crud;
+			} else {
+				$countryFlag[] = '';
+			}
+			/*---------END logics needed to country img ------------------*/
 
 		}
 		//end elimen unwanted characters
 
-		// print '<pre>';
-		// print_r($personaName);
-		// print '</pre>';
-
 		$user_personal_info = [
-			'personaName' => $personaName[1]
+			'personaName' => $personaName[1],
+			'countryFlag' => $countryFlag[1]
 		];
 		/*END USER PERSONAL INFO*/
 
@@ -261,7 +271,7 @@ if (!empty($_GET['page'])) {
 /*----------------------------------------------------------------------------------------------------------------END USAGE METHODS---------------------------------------------*/
 
 	/*RETURN JSON AT PAGE*/
-	echo json_encode($ComRes);
+	// echo json_encode($ComRes);
 	// echo json_last_error_msg();
 
 	// print '<pre>';
