@@ -80,10 +80,10 @@ if (!empty($_GET['page'])) {
 
 /*
 /--------------------------------------------------------------------------------------
-/				parsing  FIELDS COUNT
+/				method fieldCount
 /--------------------------------------------------------------------------------------
+/ 	USED: for obtain feld "success" & "search_result count"
 /	Return number of results found
-/ 	I use this function below for obtain feld "success" & "search_result count"
 */
 	function fieldCount($genContent, $fieldSearched, $indent){
 		$result = '';
@@ -101,14 +101,16 @@ if (!empty($_GET['page'])) {
 		// will be return count  of search result 
 		return $result;
 	}
+
+
 /*
 /--------------------------------------------------------------------------------------
-/					METHODS USED BY FELD user_match_info
+/					method clip_iter_value
 /--------------------------------------------------------------------------------------
-/	one of the most most used function
-/	cut string from declared 
-/	clip value in each iteration (user_match_info)
-/	return :  
+/	USED: everything
+/	DESC:
+/		cut value in each iteration (user_match_info)
+/	RETURN: truncated string
 */
 	function clip_iter_value($iter, $findTextPos){
 		$result = '';
@@ -117,9 +119,16 @@ if (!empty($_GET['page'])) {
 		$result = substr($iter, $fromClip, $toClip);
 		return $result;
 	}
-	//END value in each iteration (user_match_info)
 
-	//clip spans
+
+/*
+/--------------------------------------------------------------------------------------
+/					method clipSpans 
+/--------------------------------------------------------------------------------------
+/	USED: for obtain field user_match_info
+/	DESC:
+/		this function used only for obtain user_match_info "Also known as" 
+*/
 	function clipSpans($arr){
 		$result = [];
 		for($i = 1; $i < sizeof($arr); $i++){
@@ -139,17 +148,39 @@ if (!empty($_GET['page'])) {
 
 		return $result;
 	}
-	//END clip spans
-	/*-----END METHODS USED BY FELD user_match_info-------*/
 
-	//--------------UNWANTED CHARACTERS FROM STRING
-	//clean function elimen characters from one string 
+
+/*
+/--------------------------------------------------------------------------------------
+/					method clean
+/--------------------------------------------------------------------------------------
+/	USED: throughout the code
+/	TAKE ARG:
+/		1) $string - single string
+/		2) $arrChar - arr with characters what need to remove from string
+/	DESC:
+/		UNWANTED CHARACTERS FROM STRING (SINGLE DELETIONS)
+/		clean function elimen characters from one string 
+*/
 	function clean($string, $arrChar) {
 		$string = str_replace($arrChar, '', $string);
 		return $string;
 	}
 
-	// unwantedCharacters function get two arguments arr with strings and arr with characters what need to remove from strings
+
+/*
+/--------------------------------------------------------------------------------------
+/					UNWANTED CHARACTERS FROM STRINGS (MULTIPLE DELETIONS)
+/--------------------------------------------------------------------------------------
+/	used throughout the code
+/	accepts as a parameter two arguments:
+/		1) $usortedArr -arr with unsorted strings
+/		2) $elimenArgArr - arr with characters what need to remove from strings
+/
+/	method unwantedCharacters 
+/	clean function elimen characters from one string 
+*/
+	// 
 	function unwantedCharacters($usortedArr, $elimenArgArr){
 		$result= [];
 		foreach ($usortedArr as $key => $value) {
