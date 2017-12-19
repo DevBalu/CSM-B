@@ -1,12 +1,13 @@
 <?php 
 /*
-*	Search is performed by several etapes;
-*	1)we send request to https://steamcommunity.com for open session and it save.
-*	2)after we send request for searching users using several parametres a)texh which we search. b)sessionId which we open before.
-*
-*	HERE WILL BE DESCRIBED ALL METHODS AND FUNCTION WHAT WE USE BELOW
-*
+/--------------------------------------------------------------------------------------
+/					Short describtion
+/--------------------------------------------------------------------------------------
+/	Search is performed by several etapes;
+/	1)we send request to https://steamcommunity.com for open session and it save.
+/	2)after we send request for searching users using several parametres a)texh which we search. b)sessionId which we open before. с) page searched
 */
+
 require('../vendor/autoload.php');
 use Buzz\Browser;
 use Buzz\Client\Curl;
@@ -75,9 +76,15 @@ if (!empty($_GET['page'])) {
 	}
 	/*-----END USER ENTITY---------*/
 
-/*-------------------------------------------------------------------------------------------------------------------------------METHODS---------------------------------------------*/
+/*------------------------------------------------------------------------------METHODS-------------------------------------------------------------------------*/
 
-	/*-----PRS FIELDS COUNT---------*/
+/*
+/--------------------------------------------------------------------------------------
+/				parsing  FIELDS COUNT
+/--------------------------------------------------------------------------------------
+/	Return number of results found
+/ 	I use this function below for obtain feld "success" & "search_result count"
+*/
 	function fieldCount($genContent, $fieldSearched, $indent){
 		$result = '';
 		// get part where is success field 
@@ -94,10 +101,15 @@ if (!empty($_GET['page'])) {
 		// will be return count  of search result 
 		return $result;
 	}
-	/*-----END PRS FIELDS COUNT---------*/
-
-	/*-----METHODS USED BY FELD user_match_info-------*/
-	//clip value in each iteration (user_match_info)
+/*
+/--------------------------------------------------------------------------------------
+/					METHODS USED BY FELD user_match_info
+/--------------------------------------------------------------------------------------
+/	one of the most most used function
+/	cut string from declared 
+/	clip value in each iteration (user_match_info)
+/	return :  
+*/
 	function clip_iter_value($iter, $findTextPos){
 		$result = '';
 		$fromClip = strrpos($iter, $findTextPos);
@@ -120,6 +132,7 @@ if (!empty($_GET['page'])) {
 			}
 
 			$clip = substr_replace($arr[$i], ' ', $fromClip, $toClip);
+			$clip = str_replace("\\", '%', $clip);
 
 			$result[] = $clip;
 		}
@@ -202,7 +215,6 @@ if (!empty($_GET['page'])) {
 		/*END USER MUCH INFO*/
 
 		/*USER PERSONAL INFO*/
-
 		$crud_user_personal_info = clip_iter_value($search_row[$i] , '<div class=\"searchPersonaInfo\">');
 		$explode_personal_info = explode('\"searchPersonaName\"', $crud_user_personal_info);//part is to element in arrs 
 
@@ -227,18 +239,34 @@ if (!empty($_GET['page'])) {
 			$replace = str_replace($need_to_remove, " ", $persona_name_crud); // replace from tag a to end of string
 			$need_to_add = clip_iter_value($replace, '\">');//from start to this characrer clip ' \"> '
 			$need_to_add = str_replace('\">', '', $need_to_add);//inclusive and ' \"> ' need to remove
-			$need_to_add = unicode_decode($need_to_add);// decode unicode
+			$need_to_add = str_replace('\\', '%', $need_to_add);//inclusive and ' \"> ' need to remove
+			// $need_to_add = unicode_decode($need_to_add);// decode unicode
 			//final sort persona name
 			$personaName[] = $need_to_add;
 			//---END logics needed to obtain personal Name
 
 
 			/*---------logics needed to obtain region------------*/
-// unwantedCharacters
-			$region_crud = substr($replaced, strpos($replaced, 'profiles/'), 200);
-
+			$region_crud = substr($replaced, strpos($replaced, 'profiles/'), 150);
 			if (strpos($region_crud, '<img  s')) {
-				print_r($region_crud . "\n");
+				// cut unwanted part of string from "<img  s " to end of string
+				$rc_need_to_rm = clip_iter_value($region_crud, "<img  s");
+				// remove this part of string
+				$rc_replace = str_replace($rc_need_to_rm, '', $region_crud);
+				// cut needed part of string from declared characters to end of string 
+				$rc_need_to_add = clip_iter_value($rc_replace , '</a><br />');
+				// explode characters from string
+				$rc_need_to_add = clean($rc_need_to_add, ['</a><br />']);
+				// cut part of string from <br /> to end 
+				$rc_need_to_add = clip_iter_value($rc_need_to_add, "<br />");
+				// remove inclusiv and <br />
+				$rc_need_to_add = clean($rc_need_to_add, '<br />');
+
+				if ($rc_need_to_add !== '') {
+					$personaRegion[] = $rc_need_to_add;
+				}else {
+					$personaRegion[] = '';
+				}
 			}
 
 
@@ -260,23 +288,22 @@ if (!empty($_GET['page'])) {
 
 		$user_personal_info = [
 			'personaName' => $personaName[1],
-			'countryFlag' => $countryFlag[1]
+			'countryFlag' => $countryFlag[1],
+			'personaRegion' => (!empty($personaRegion) ? $personaRegion[0] : '')
 		];
 		/*END USER PERSONAL INFO*/
-
 
 		$user = new UserData($userUrl, $userLinkAvatar, $user_personal_info, $user_match_info);
 		$ComRes->setUserData($user);
 	}/*END MAIN FOR*/
 /*----------------------------------------------------------------------------------------------------------------END USAGE METHODS---------------------------------------------*/
 
-	/*RETURN JSON AT PAGE*/
-	// echo json_encode($ComRes);
+/*----------------------------------------------------------------------------------------------------------------RETURN JSON AT PAGE---------------------------------------------*/
+	echo json_encode($ComRes);
 	// echo json_last_error_msg();
 
 	// print '<pre>';
 	// print_r($ComRes);
-	// print_r(utf8ize($ComRes));
 	// print_r($content);
 	// print '</pre>';
 
